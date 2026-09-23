@@ -54,3 +54,5 @@ engines:
     disabled: true
   - name: wikidata
     disabled: true
+  - name: wikipedia
+    disabled: true
