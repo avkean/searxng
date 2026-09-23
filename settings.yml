@@ -1,0 +1,50 @@
+use_default_settings: true
+
+general:
+  instance_name: "AVKEAN Search"
+  contact_url: https://avkean.com
+
+brand:
+  issue_url: https://github.com/avkean/searxng/issues
+  new_issue_url: https://github.com/avkean/searxng/issues/new
+
+search:
+  autocomplete: kagi
+  autocomplete_min: 1
+  suspended_times:
+    SearxEngineCaptcha: 60
+
+engines:
+  - name: google
+    disabled: false
+    inactive: false
+    engine: google_stateless
+    # language is already set in the URL
+    send_accept_language_header: false
+    # use IPv6
+    local_addresses: "::"
+    # HTTP/3 gets CAPTCHAs, HTTP/2 doesn't
+    enable_http3: false
+    retries: 0
+    retry_on_http_error: false
+  - name: google cse
+    disabled: true
+  # Bing results were mostly irrelevant
+  - name: bing
+    disabled: true
+    inactive: true
+  - name: duckduckgo web
+    disabled: false
+    retries: 0
+    retry_on_http_error: false
+  # fallback for when Google is suspended
+  - name: brave
+    disabled: false
+    retries: 0
+    retry_on_http_error: false
+  - name: duckduckgo
+    disabled: true
+  - name: startpage
+    disabled: true
+  - name: wikidata
+    disabled: true

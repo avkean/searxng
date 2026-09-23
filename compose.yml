@@ -1,0 +1,152 @@
+name: searxng
+
+services:
+  searxng:
+    build: .
+    container_name: searxng
+    user: searxng
+    command: ["/usr/local/searxng/.venv/bin/granian", "searx.webapp:app"]
+    init: true
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=64m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      SEARXNG_SECRET: ${SEARXNG_SECRET}
+      SEARXNG_LIMITER: "true"
+      SEARXNG_PUBLIC_INSTANCE: "true"
+      SEARXNG_IMAGE_PROXY: "true"
+      SEARXNG_VALKEY_URL: valkey://searxng-valkey:6379/0
+    volumes:
+      - ./settings.yml:/etc/searxng/settings.yml:ro
+      - ./limiter.toml:/etc/searxng/limiter.toml:ro
+      - ./google_stateless.py:/usr/local/searxng/searx/engines/google_stateless.py:ro
+      - ./branding/index.html:/usr/local/searxng/searx/templates/simple/index.html:ro
+      - ../../infra/anubis-assets/anubis-logo.svg:/usr/local/searxng/searx/static/themes/simple/img/avkean-systems.svg:ro
+      - searxng_cache:/var/cache/searxng
+    networks:
+      - searxng_net
+    depends_on:
+      searxng-valkey:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - python -c "import urllib.request; request = urllib.request.Request('http://127.0.0.1:8080/', headers={'X-Real-IP':'127.0.0.1'}); urllib.request.urlopen(request, timeout=5)"
+      interval: 30s
+      timeout: 8s
+      retries: 5
+      start_period: 30s
+    pids_limit: 256
+    mem_limit: 1g
+    stop_grace_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  searxng-valkey:
+    image: valkey/valkey:9-alpine
+    container_name: searxng-valkey
+    init: true
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    security_opt:
+      - no-new-privileges:true
+    command:
+      - valkey-server
+      - --save
+      - "60"
+      - "1"
+      - --loglevel
+      - warning
+      - --maxmemory
+      - 192mb
+      - --maxmemory-policy
+      - allkeys-lru
+    volumes:
+      - searxng_valkey:/data
+    networks:
+      - searxng_net
+    healthcheck:
+      test:
+        - CMD
+        - valkey-cli
+        - ping
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    pids_limit: 128
+    mem_limit: 256m
+    stop_grace_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  searxng-anubis:
+    image: ghcr.io/techarohq/anubis:latest
+    container_name: searxng-anubis
+    init: true
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      BIND: :8080
+      TARGET: http://searxng:8080
+      POLICY_FNAME: /etc/anubis/policy.yml
+      ED25519_PRIVATE_KEY_HEX: ${ANUBIS_ED25519_KEY}
+      REDIRECT_DOMAINS: searxng.avkean.com,lyybdkn77b44vcqp7rc3fbcdgugzm7ygsce2mthjyztqhbjpdfqmt2qd.onion
+      CUSTOM_REAL_IP_HEADER: X-Real-IP
+      COOKIE_EXPIRATION_TIME: 168h
+      COOKIE_HTTP_ONLY: "true"
+      COOKIE_SECURE: "false"
+      COOKIE_PARTITIONED: "false"
+      COOKIE_SAME_SITE: Lax
+      SERVE_ROBOTS_TXT: "true"
+      METRICS_BIND: ""
+    volumes:
+      - ./anubis-policy.yml:/etc/anubis/policy.yml:ro
+    networks:
+      - searxng_net
+      - proxy_net
+    depends_on:
+      searxng:
+        condition: service_healthy
+    pids_limit: 128
+    mem_limit: 128m
+    stop_grace_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+volumes:
+  searxng_cache:
+  searxng_valkey:
+
+networks:
+  searxng_net:
+    enable_ipv6: true
+  proxy_net:
+    external: true

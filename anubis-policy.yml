@@ -1,0 +1,51 @@
+bots:
+  - name: caddy-healthcheck
+    headers_regex:
+      X-SearXNG-Healthcheck: "^1$"
+    action: ALLOW
+
+  - import: (data)/bots/_deny-pathological.yaml
+  - import: (data)/bots/aggressive-brazilian-scrapers.yaml
+  - import: (data)/meta/ai-block-aggressive.yaml
+
+  - name: known-crawler
+    user_agent_regex: "(?i:bot|crawler|spider|scraper|slurp)"
+    action: DENY
+
+  # Static files stay public so pages don't break when the cookie expires.
+  - name: public-static-assets
+    path_regex: '^/(static/.*|manifest\.json|favicon\.ico)$'
+    action: ALLOW
+
+  # Address bar suggestions are sent without cookies.
+  - name: browser-autocompleter
+    expression:
+      all:
+        - path == "/autocompleter"
+        - userAgent.matches("Mozilla|Opera")
+    action: ALLOW
+
+  - name: browser-proof-of-work
+    user_agent_regex: "Mozilla|Opera"
+    action: CHALLENGE
+    challenge:
+      algorithm: fast
+      difficulty: 4
+
+  - name: unmatched-client
+    expression: "true"
+    action: DENY
+
+dnsbl: false
+
+honeypot:
+  enabled: false
+
+status_codes:
+  CHALLENGE: 200
+  DENY: 403
+
+store:
+  backend: valkey
+  parameters:
+    url: "redis://searxng-valkey:6379/1"
