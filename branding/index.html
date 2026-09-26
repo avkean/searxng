@@ -3,11 +3,9 @@
 {% block content %}
 <style>
   .avkean-logo { display: block; width: min(30rem, 82vw); height: auto; margin: 4rem auto 2.75rem; }
-  .theme-dark .avkean-logo, .theme-black .avkean-logo { filter: brightness(0) invert(1); }
-  @media (prefers-color-scheme: dark) { .theme-auto .avkean-logo { filter: brightness(0) invert(1); } }
 </style>
 <div class="index">
-  <img class="avkean-logo" src="{{ url_for('static', filename='img/avkean-systems.svg') }}" alt="AVKEAN Systems">
+  <img class="avkean-logo" src="{{ url_for('static', filename='img/searxng.png') }}" alt="avkean search">
   {% include "simple/simple_search.html" %}
 </div>
 {% endblock %}

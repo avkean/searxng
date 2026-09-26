@@ -11,7 +11,7 @@ Config for AVKEAN Search, a public SearXNG instance. It runs the official `searx
 - `google_stateless.py`: Google engine with no connection, cookie or TLS session reuse. This is what keeps Google from returning CAPTCHAs.
 - `anubis-policy.yml`: Anubis rules. Static files and `/autocompleter` skip the challenge.
 - `limiter.toml`: SearXNG limiter.
-- `branding/index.html`: homepage with the AVKEAN logo. Everything else uses the stock theme.
+- `branding/`: logo and icons. `index.html` is the homepage and `searxng-wordmark.min.svg` replaces the results-page logo. The reverse proxy serves the other files in place of the stock theme images.
 - `update.sh`: rebuilds on the latest images and rolls back if `smoke-test.sh` fails. It runs nightly from cron.
 
 Secrets are in `.env`, which is not committed.

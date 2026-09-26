@@ -26,7 +26,7 @@ services:
       - ./limiter.toml:/etc/searxng/limiter.toml:ro
       - ./google_stateless.py:/usr/local/searxng/searx/engines/google_stateless.py:ro
       - ./branding/index.html:/usr/local/searxng/searx/templates/simple/index.html:ro
-      - ../../infra/anubis-assets/anubis-logo.svg:/usr/local/searxng/searx/static/themes/simple/img/avkean-systems.svg:ro
+      - ./branding/searxng-wordmark.min.svg:/usr/local/searxng/searx/templates/simple/searxng-wordmark.min.svg:ro
       - searxng_cache:/var/cache/searxng
     networks:
       - searxng_net
