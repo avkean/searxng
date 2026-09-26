@@ -2,10 +2,10 @@
 {% from "simple/icons.html" import icon_big %}
 {% block content %}
 <style>
-  .avkean-logo { display: block; width: min(30rem, 82vw); height: auto; margin: 4rem auto 2.75rem; }
+  .index .title { margin-left: 1.25rem; margin-right: 1.25rem; }
 </style>
 <div class="index">
-  <img class="avkean-logo" src="{{ url_for('static', filename='img/searxng.png') }}" alt="avkean search">
+  <div class="title"><h1>avkean search</h1></div>
   {% include "simple/simple_search.html" %}
 </div>
 {% endblock %}
