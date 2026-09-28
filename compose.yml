@@ -18,7 +18,6 @@ services:
     environment:
       SEARXNG_SECRET: ${SEARXNG_SECRET}
       SEARXNG_LIMITER: "true"
-      SEARXNG_PUBLIC_INSTANCE: "true"
       SEARXNG_IMAGE_PROXY: "true"
       SEARXNG_VALKEY_URL: valkey://searxng-valkey:6379/0
     volumes:

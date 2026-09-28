@@ -14,6 +14,10 @@ search:
   suspended_times:
     SearxEngineCaptcha: 60
 
+preferences:
+  lock:
+    - image_proxy
+
 categories_as_tabs:
   general:
   images:
