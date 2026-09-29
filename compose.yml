@@ -98,7 +98,7 @@ services:
         max-file: "3"
 
   searxng-anubis:
-    image: ghcr.io/techarohq/anubis:latest
+    image: ghcr.io/techarohq/anubis:v1.27.0@sha256:8828275668b7bc675679f100970f9714f731388fbbf66ae94de8aca952e3fc4a
     container_name: searxng-anubis
     init: true
     restart: unless-stopped
