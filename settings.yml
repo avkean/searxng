@@ -49,6 +49,7 @@ engines:
     retry_on_http_error: false
   # fallback for when Google is suspended
   - name: brave
+    engine: brave_web
     disabled: false
     retries: 0
     retry_on_http_error: false

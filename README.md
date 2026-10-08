@@ -4,7 +4,8 @@ Config for [AVKEAN Search](https://searxng.avkean.com), my public SearXNG instan
 
 It runs the official SearXNG image, with a few changes. Parts of the setup are adapted from [priv.au](https://priv.au) ([privau/searxng](https://github.com/privau/searxng)).
 
-- a Google engine (`google_stateless.py`) that doesn't reuse connections, cookies or TLS sessions, since the default one kept hitting CAPTCHAs on my server
+- a Google engine (`google_stateless.py`) that asks for Google's Opera Mini page and doesn't reuse connections, cookies or TLS sessions, since the default one kept hitting CAPTCHAs on my server and Google has since blocked the page it uses
+- a Brave engine (`brave_web.py`) that reads the results page HTML over HTTP/3, since Brave changed the page data the default one reads and rate limits HTTP/2
 - [Anubis](https://github.com/TecharoHQ/anubis) in front of SearXNG
 - my logo and icons in place of the SearXNG ones
 

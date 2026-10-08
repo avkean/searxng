@@ -26,11 +26,17 @@ for locale, page, time_range, safe in (
     expected = {**params, "headers": {}}
     upstream.google_request("searxng documentation", expected, eng_traits=engine.traits)
     engine.request("searxng documentation", params)
-    actual_query = parse_qs(urlsplit(params["url"]).query, keep_blank_values=True)
+    actual_url = urlsplit(params["url"])
+    assert (actual_url.netloc, actual_url.path) == ("www.google.com", "/search")
+    assert params["impersonate"] == "none"
+    assert "Opera Mini" in params["headers"]["User-Agent"]
+    actual_query = parse_qs(actual_url.query, keep_blank_values=True)
     expected_query = parse_qs(urlsplit(expected["url"]).query, keep_blank_values=True)
+    assert actual_query.pop("client") == ["ms-opera"]
     assert actual_query.pop("cr") == [""], "Country must not restrict search results"
     assert actual_query.pop("gl") == [engine.traits.get_region(locale, "") or ""]
     expected_query.pop("cr", None)
+    expected_query.pop("gl", None)
     assert actual_query == expected_query, "Query, language, paging or filters changed"
     assert params["curl_options"][CurlOpt.FRESH_CONNECT] == 1
     assert params["curl_options"][CurlOpt.FORBID_REUSE] == 1

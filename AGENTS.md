@@ -8,7 +8,8 @@ Config for AVKEAN Search, a public SearXNG instance. It runs the official `searx
 
 - `Dockerfile`: official image; only changes the Source code link.
 - `settings.yml`: overrides on top of the SearXNG defaults.
-- `google_stateless.py`: Google engine with no connection, cookie or TLS session reuse. This is what keeps Google from returning CAPTCHAs.
+- `google_stateless.py`: Google engine with no connection, cookie or TLS session reuse. This is what keeps Google from returning CAPTCHAs. It asks for the page Google serves Opera Mini, since Google blocks upstream's Nokia `/wml/search` page.
+- `brave_web.py`: Brave web search read from the results page HTML. Brave only answers HTTP/3 without a 429.
 - `anubis-policy.yml`: Anubis rules. Static files and `/autocompleter` skip the challenge.
 - `limiter.toml`: SearXNG limiter.
 - `branding/`: logo and icons. `index.html` is the homepage and `searxng-wordmark.min.svg` replaces the results-page logo. The reverse proxy serves the other files in place of the stock theme images.
