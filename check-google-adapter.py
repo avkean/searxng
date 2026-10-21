@@ -24,8 +24,7 @@ for locale, page, time_range, safe in (
     assert (actual_url.netloc, actual_url.path) == ("searxng-google:8080", "/search")
     actual_query = parse_qs(actual_url.query)
     expected_query = parse_qs(urlsplit(expected["url"]).query)
-    assert actual_query.pop("gl", [""]) == [engine.traits.get_region(locale, "") or ""]
-    for key in ("q", "hl", "lr", "start", "tbs", "safe"):
+    for key in ("q", "hl", "start", "tbs", "safe"):
         assert actual_query.pop(key, None) == expected_query.get(key), key + " changed"
     assert not actual_query, actual_query
 

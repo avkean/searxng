@@ -191,5 +191,12 @@ volumes:
 networks:
   searxng_net:
     enable_ipv6: true
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+        # A slice of the server's own /64. With a private fd00:: range,
+        # Chromium prefers IPv4, and Google gives this server's IPv4
+        # address noticeably worse results.
+        - subnet: 2a11:8083:11:17e0:5e::/80
   proxy_net:
     external: true

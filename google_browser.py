@@ -4,7 +4,7 @@ Google only serves results to clients that pass its JavaScript check, so the
 Google engine asks this service instead of Google. Every search gets a fresh
 browser context, so no cookies or storage carry over between searches.
 
-GET /search?q=...&hl=...&lr=...&gl=...&start=...&tbs=...&safe=...
+GET /search?q=...&hl=...&start=...&tbs=...&safe=...
 returns {"results": [{"url", "title", "content"}], "suggestions": [...]}
 or {"captcha": true} when Google answers with its CAPTCHA page.
 """
@@ -16,7 +16,7 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from playwright.async_api import async_playwright
 
-PARAMS = ("q", "hl", "lr", "cr", "gl", "start", "tbs", "safe")
+PARAMS = ("q", "hl", "start", "tbs", "safe")
 MAX_PAGES = 4
 TIMEOUT_MS = 8000
 

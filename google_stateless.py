@@ -27,15 +27,10 @@ base_url = "http://searxng-google:8080/search?"
 
 def request(query, params):
     google_info = _google.get_google_info(params, traits)
-    # For locales like en-SG, prefer local results instead of only
-    # returning results from that country (cr=countrySG).
-    region = traits.get_region(params["searxng_locale"], "") or ""
-    args = {
-        "q": query,
-        "hl": google_info["params"]["hl"],
-        "lr": google_info["params"]["lr"],
-        "gl": region,
-    }
+    # Only the interface language, like a normal browser. Google takes the
+    # region from the server's IP. Sending gl and lr made results noticeably
+    # worse, since gl follows the browser language (en-US gets US results).
+    args = {"q": query, "hl": google_info["params"]["hl"]}
     if params["pageno"] > 1:
         args["start"] = (params["pageno"] - 1) * 10
     if params["time_range"] in _google.time_range_dict:
