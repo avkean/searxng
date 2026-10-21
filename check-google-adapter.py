@@ -1,20 +1,14 @@
 """Offline checks for google_stateless.py. Doesn't send anything to Google."""
 
 from urllib.parse import urlsplit, parse_qs
-from curl_cffi import CurlOpt
-from searx import settings, network
+from searx import settings
 from searx.engines import load_engines, engines
 from searx.engines import google as upstream
 from searx.search.processors.online import default_request_params
 
 load_engines([entry for entry in settings["engines"] if entry["name"] == "google"])
-network.initialize()
 engine = engines["google"]
-transport = network.get_network("google")
 assert engine.engine == "google_stateless"
-assert transport.verify is True, "TLS certificate verification must remain enabled"
-assert transport.enable_http2 is True and transport.enable_http3 is False
-assert transport.local_addresses == "::" and transport.retries == 0
 
 for locale, page, time_range, safe in (
     ("all", 1, None, 0),
@@ -27,20 +21,12 @@ for locale, page, time_range, safe in (
     upstream.google_request("searxng documentation", expected, eng_traits=engine.traits)
     engine.request("searxng documentation", params)
     actual_url = urlsplit(params["url"])
-    assert (actual_url.netloc, actual_url.path) == ("www.google.com", "/search")
-    assert params["impersonate"] == "none"
-    assert "Opera Mini" in params["headers"]["User-Agent"]
-    actual_query = parse_qs(actual_url.query, keep_blank_values=True)
-    expected_query = parse_qs(urlsplit(expected["url"]).query, keep_blank_values=True)
-    assert actual_query.pop("client") == ["ms-opera"]
-    assert actual_query.pop("cr") == [""], "Country must not restrict search results"
-    assert actual_query.pop("gl") == [engine.traits.get_region(locale, "") or ""]
-    expected_query.pop("cr", None)
-    expected_query.pop("gl", None)
-    assert actual_query == expected_query, "Query, language, paging or filters changed"
-    assert params["curl_options"][CurlOpt.FRESH_CONNECT] == 1
-    assert params["curl_options"][CurlOpt.FORBID_REUSE] == 1
-    assert params["curl_options"][CurlOpt.SSL_SESSIONID_CACHE] == 0
-    assert params["curl_options"][CurlOpt.COOKIELIST] == "ALL"
+    assert (actual_url.netloc, actual_url.path) == ("searxng-google:8080", "/search")
+    actual_query = parse_qs(actual_url.query)
+    expected_query = parse_qs(urlsplit(expected["url"]).query)
+    assert actual_query.pop("gl", [""]) == [engine.traits.get_region(locale, "") or ""]
+    for key in ("q", "hl", "lr", "start", "tbs", "safe"):
+        assert actual_query.pop(key, None) == expected_query.get(key), key + " changed"
+    assert not actual_query, actual_query
 
 print("Google adapter compatibility checks passed (no upstream queries)")

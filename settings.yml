@@ -29,12 +29,10 @@ engines:
     disabled: false
     inactive: false
     engine: google_stateless
-    # language is already set in the URL
-    send_accept_language_header: false
-    # use IPv6
-    local_addresses: "::"
-    # HTTP/3 gets CAPTCHAs, HTTP/2 doesn't
-    enable_http3: false
+    # searxng-google is plain HTTP inside the Docker network
+    enable_http: true
+    # a browser search takes a second or two
+    timeout: 6.0
     retries: 0
     retry_on_http_error: false
   - name: google cse

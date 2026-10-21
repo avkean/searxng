@@ -4,7 +4,7 @@ set -euo pipefail
 app_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 compose=(docker compose -f "$app_dir/compose.yml")
 
-# Anubis is pinned by digest, so an update never changes it.
+# Anubis and searxng-google are pinned by digest, so an update never changes them.
 containers=(searxng searxng-valkey)
 
 exec 9>/tmp/searxng-update.lock

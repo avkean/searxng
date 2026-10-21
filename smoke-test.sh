@@ -6,12 +6,12 @@ compose=(docker compose -f "$app_dir/compose.yml")
 
 "${compose[@]}" config --quiet
 
-for container in searxng searxng-valkey searxng-anubis; do
+for container in searxng searxng-valkey searxng-google searxng-anubis; do
   test "$(docker inspect -f '{{.State.Running}}' "$container")" = true
   test -z "$(docker port "$container")"
 done
 
-for container in searxng searxng-valkey; do
+for container in searxng searxng-valkey searxng-google; do
   test "$(docker inspect -f '{{.State.Health.Status}}' "$container")" = healthy
 done
 

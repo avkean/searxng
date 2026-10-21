@@ -4,11 +4,12 @@ Guidance for coding agents working in this repository.
 
 ## Overview
 
-Config for AVKEAN Search, a public SearXNG instance. It runs the official `searxng/searxng` image. Requests go through the reverse proxy to Anubis (`searxng-anubis`), then SearXNG (`searxng`). Valkey (`searxng-valkey`) backs the SearXNG limiter and Anubis.
+Config for AVKEAN Search, a public SearXNG instance. It runs the official `searxng/searxng` image. Requests go through the reverse proxy to Anubis (`searxng-anubis`), then SearXNG (`searxng`). SearXNG gets Google results from `searxng-google`. Valkey (`searxng-valkey`) backs the SearXNG limiter and Anubis.
 
 - `Dockerfile`: official image; only changes the Source code link.
 - `settings.yml`: overrides on top of the SearXNG defaults.
-- `google_stateless.py`: Google engine with no connection, cookie or TLS session reuse. This is what keeps Google from returning CAPTCHAs. It asks for the page Google serves Opera Mini, since Google blocks upstream's Nokia `/wml/search` page.
+- `google_stateless.py`: Google engine. It asks `searxng-google` instead of Google, since Google blocks or sends a JavaScript check to every client that can't run JavaScript.
+- `google_browser.py`: the `searxng-google` service. It runs each Google search in a fresh headless Chromium context and returns the results as JSON. Its Playwright image is pinned by version and digest; bump it by hand, keeping the `pip install playwright` version the same.
 - `brave_web.py`: Brave web search read from the results page HTML. Brave only answers HTTP/3 without a 429.
 - `anubis-policy.yml`: Anubis rules. Static files and `/autocompleter` skip the challenge.
 - `limiter.toml`: SearXNG limiter.
@@ -19,7 +20,7 @@ Secrets are in `.env`, which is not committed.
 
 ## Rules
 
-- Google is what makes the results good. Don't remove `google_stateless.py` or change Google's network settings without testing real queries, and keep test query volume low.
+- Google is what makes the results good. Don't remove `google_stateless.py` or `google_browser.py`, or change how the browser searches, without testing real queries, and keep test query volume low.
 - Prefer settings over code or template overrides. Keep changes small.
 - Don't publish ports. Only Anubis is on `proxy_net`.
 

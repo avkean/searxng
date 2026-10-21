@@ -50,6 +50,49 @@ services:
         max-size: 10m
         max-file: "3"
 
+  searxng-google:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM mcr.microsoft.com/playwright/python:v1.64.0-noble@sha256:684df257a1fa0ef3fa288239819984008f560e8f8db5b635ee9e2a50cbcd2e23
+        RUN pip install --no-cache-dir --break-system-packages playwright==1.64.0
+        COPY google_browser.py /app/google_browser.py
+    container_name: searxng-google
+    user: pwuser
+    command: ["python3", "/app/google_browser.py"]
+    init: true
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=256m
+    environment:
+      HOME: /tmp
+    shm_size: 256m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - searxng_net
+    healthcheck:
+      test:
+        - CMD
+        - python3
+        - -c
+        - import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz', timeout=5)
+      interval: 30s
+      timeout: 8s
+      retries: 5
+      start_period: 30s
+    pids_limit: 512
+    mem_limit: 1g
+    stop_grace_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
   searxng-valkey:
     image: valkey/valkey:9-alpine
     container_name: searxng-valkey
