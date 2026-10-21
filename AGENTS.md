@@ -23,6 +23,7 @@ Secrets are in `.env`, which is not committed.
 - Google is what makes the results good. Don't remove `google_stateless.py` or `google_browser.py`, or change how the browser searches, without testing real queries, and keep test query volume low.
 - Prefer settings over code or template overrides. Keep changes small.
 - Don't publish ports. Only Anubis is on `proxy_net`.
+- Google must go out over IPv6. That's why `searxng_net` uses a slice of the server's IPv6 range, and why `limiter.toml` trusts it. Google gives the server's IPv4 address much worse results.
 
 ## Checks
 
