@@ -5,6 +5,8 @@ trusted_proxies = [
   "127.0.0.0/8",
   "::1",
   "172.16.0.0/12",
+  # searxng_net, see compose.yml
+  "2a11:8083:11:17e0:5e::/80",
 ]
 
 [botdetection.ip_limit]
