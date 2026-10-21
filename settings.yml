@@ -29,6 +29,9 @@ engines:
     disabled: false
     inactive: false
     engine: google_stateless
+    # Google's order leads, the other engines fill in. Higher than 4 only
+    # pushes out useful extras from Brave and DuckDuckGo.
+    weight: 4
     # searxng-google is plain HTTP inside the Docker network
     enable_http: true
     # a browser search takes a second or two
