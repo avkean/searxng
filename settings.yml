@@ -28,14 +28,13 @@ engines:
   - name: google
     disabled: false
     inactive: false
-    engine: google_stateless
+    # The fix priv.au runs. If Google stops answering it, go back to the
+    # browser: engine google_stateless, enable_http true, timeout 6.0.
+    engine: google_dual_ua
     # Google's order leads, the other engines fill in. Higher than 4 only
     # pushes out useful extras from Brave and DuckDuckGo.
     weight: 4
-    # searxng-google is plain HTTP inside the Docker network
-    enable_http: true
-    # a browser search takes a second or two
-    timeout: 6.0
+    timeout: 3.0
     retries: 0
     retry_on_http_error: false
   - name: google cse

@@ -1,14 +1,15 @@
-"""Offline checks for google_stateless.py. Doesn't send anything to Google."""
+"""Offline checks for google_dual_ua.py. Doesn't send anything to Google."""
 
 from urllib.parse import urlsplit, parse_qs
+from curl_cffi import CurlOpt
+from curl_cffi.const import CurlIpResolve
 from searx import settings
 from searx.engines import load_engines, engines
-from searx.engines import google as upstream
 from searx.search.processors.online import default_request_params
 
 load_engines([entry for entry in settings["engines"] if entry["name"] == "google"])
 engine = engines["google"]
-assert engine.engine == "google_stateless"
+assert engine.engine == "google_dual_ua"
 
 for locale, page, time_range, safe in (
     ("all", 1, None, 0),
@@ -17,15 +18,17 @@ for locale, page, time_range, safe in (
 ):
     params = default_request_params()
     params.update(searxng_locale=locale, pageno=page, time_range=time_range, safesearch=safe)
-    expected = {**params, "headers": {}}
-    upstream.google_request("searxng documentation", expected, eng_traits=engine.traits)
     engine.request("searxng documentation", params)
-    actual_url = urlsplit(params["url"])
-    assert (actual_url.netloc, actual_url.path) == ("searxng-google:8080", "/search")
-    actual_query = parse_qs(actual_url.query)
-    expected_query = parse_qs(urlsplit(expected["url"]).query)
-    for key in ("q", "hl", "start", "tbs", "safe"):
-        assert actual_query.pop(key, None) == expected_query.get(key), key + " changed"
-    assert not actual_query, actual_query
+    url = urlsplit(params["url"])
+    assert (url.netloc, url.path) == ("www.google.com", "/search")
+    query = parse_qs(url.query)
+    assert query["q"] == ["searxng documentation"]
+    # only the interface language, no region or language filter
+    assert not {"lr", "cr", "gl"} & query.keys(), query
+    assert query.get("start") == (["10"] if page == 2 else None)
+    assert ("tbs" in query) == bool(time_range)
+    assert ("safe" in query) == bool(safe)
+    assert [name for name, _ in params["headers"]] == ["User-Agent", "User-Agent"]
+    assert params["curl_options"][CurlOpt.IPRESOLVE] == CurlIpResolve.V6
 
-print("Google adapter compatibility checks passed (no upstream queries)")
+print("Google engine checks passed (no upstream queries)")
