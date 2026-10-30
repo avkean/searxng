@@ -28,8 +28,6 @@ engines:
   - name: google
     disabled: false
     inactive: false
-    # The fix priv.au runs. If Google stops answering it, go back to the
-    # browser: engine google_stateless, enable_http true, timeout 6.0.
     engine: google_dual_ua
     # Google's order leads, the other engines fill in. Higher than 4 only
     # pushes out useful extras from Brave and DuckDuckGo.

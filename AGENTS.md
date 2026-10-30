@@ -8,9 +8,7 @@ Config for AVKEAN Search, a public SearXNG instance. It runs the official `searx
 
 - `Dockerfile`: official image; only changes the Source code link.
 - `settings.yml`: overrides on top of the SearXNG defaults.
-- `google_dual_ua.py`: Google engine. A copy of the fix priv.au runs from SearXNG pull request 6892: it sends two old phone User-Agent lines and gets a plain HTML results page. Drop it once SearXNG merges a fix.
-- `google_stateless.py`: the previous Google engine, kept as a fallback. It asks `searxng-google` instead of Google.
-- `google_browser.py`: the `searxng-google` service. It runs each Google search in a fresh headless Chromium context and returns the results as JSON. Its Playwright image is pinned by version and digest; bump it by hand, keeping the `pip install playwright` version the same.
+- `google_dual_ua.py`: Google engine with the fix priv.au runs, from SearXNG pull request 6892. It sends two old phone User-Agent lines and gets a plain HTML results page. Drop it once SearXNG merges a fix. If Google stops answering it, the headless browser version is in git history (commit 036ac51).
 - `brave_web.py`: Brave web search read from the results page HTML. Brave only answers HTTP/3 without a 429.
 - `anubis-policy.yml`: Anubis rules. Static files and `/autocompleter` skip the challenge.
 - `limiter.toml`: SearXNG limiter.
@@ -21,10 +19,10 @@ Secrets are in `.env`, which is not committed.
 
 ## Rules
 
-- Google is what makes the results good. Don't change the Google engines, or remove the browser fallback, without testing real queries, and keep test query volume low.
+- Google is what makes the results good. Don't change the Google engine without testing real queries, and keep test query volume low.
 - Prefer settings over code or template overrides. Keep changes small.
 - Don't publish ports. Only Anubis is on `proxy_net`.
-- Google must go out over IPv6. That's why `google_dual_ua.py` forces IPv6, why `searxng_net` uses a slice of the server's IPv6 range, and why `limiter.toml` trusts it. Google gives the server's IPv4 address much worse results.
+- Google must go out over IPv6. That's why `google_dual_ua.py` forces IPv6, and why `searxng_net` uses a slice of the server's IPv6 range, which `limiter.toml` trusts. Google gives the server's IPv4 address much worse results.
 
 ## Checks
 

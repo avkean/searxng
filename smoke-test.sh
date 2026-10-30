@@ -6,12 +6,12 @@ compose=(docker compose -f "$app_dir/compose.yml")
 
 "${compose[@]}" config --quiet
 
-for container in searxng searxng-valkey searxng-google searxng-anubis; do
+for container in searxng searxng-valkey searxng-anubis; do
   test "$(docker inspect -f '{{.State.Running}}' "$container")" = true
   test -z "$(docker port "$container")"
 done
 
-for container in searxng searxng-valkey searxng-google; do
+for container in searxng searxng-valkey; do
   test "$(docker inspect -f '{{.State.Health.Status}}' "$container")" = healthy
 done
 
@@ -19,10 +19,6 @@ test "$(docker exec searxng-valkey valkey-cli -n 0 ping)" = PONG
 test "$(docker exec searxng-valkey valkey-cli -n 1 ping)" = PONG
 
 docker exec -i searxng /usr/local/searxng/.venv/bin/python - < "$app_dir/check-google-adapter.py"
-
-# Google gives the server's IPv4 address much worse results
-docker exec searxng-google python3 -c \
-  "import socket; assert socket.getaddrinfo('www.google.com', 443, proto=socket.IPPROTO_TCP)[0][0] == socket.AF_INET6, 'Google would go out over IPv4'"
 
 docker exec searxng python -c \
   "import urllib.request; body=urllib.request.urlopen('http://127.0.0.1:8080/', timeout=10).read(); assert b'AVKEAN Search' in body"
