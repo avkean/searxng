@@ -11,6 +11,9 @@ brand:
 search:
   autocomplete: kagi
   autocomplete_min: 1
+  # Site icons next to results. The server fetches and caches them, so
+  # visitors never contact DuckDuckGo.
+  favicon_resolver: duckduckgo
   # Blocks are mostly one-offs now, so pause an engine for a minute, not
   # hours. MetaCrawler sits behind Cloudflare.
   suspended_times:
@@ -22,6 +25,11 @@ search:
 preferences:
   lock:
     - image_proxy
+
+# The next page loads as you scroll, no page numbers
+plugins:
+  searx.plugins.infinite_scroll.SXNGPlugin:
+    active: true
 
 categories_as_tabs:
   general:
@@ -74,7 +82,12 @@ engines:
     disabled: true
   - name: startpage
     disabled: true
-  - name: wikidata
-    disabled: true
+  # Wikipedia and Wikidata only fill the info card: Wikipedia the photo and
+  # summary, Wikidata the facts. Wikidata is often the slowest engine, so a
+  # short timeout drops the facts instead of slowing the search.
   - name: wikipedia
-    disabled: true
+    disabled: false
+    timeout: 1.5
+  - name: wikidata
+    disabled: false
+    timeout: 1.0

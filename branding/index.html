@@ -1,11 +1,7 @@
 {% extends "simple/base.html" %}
-{% from "simple/icons.html" import icon_big %}
 {% block content %}
-<style>
-  .index .title { margin-left: 1.25rem; margin-right: 1.25rem; }
-</style>
 <div class="index">
-  <div class="title"><h1>avkean search</h1></div>
+  <div class="title"><h1><span hidden>avkean search</span>{% include 'simple/searxng-wordmark.min.svg' without context %}</h1></div>
   {% include "simple/simple_search.html" %}
 </div>
 {% endblock %}

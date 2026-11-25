@@ -1,0 +1,524 @@
+/* avkean search: a compact restyle of SearXNG's simple theme.
+   Loads after the stock CSS. Colours go through the theme's own
+   variables, layout overrides stay on stable ids and classes. */
+
+:root {
+  --avk-bg: #ffffff;
+  --avk-field: #ffffff;
+  --avk-badge: #ececf0;
+  --avk-line: #dedee3;
+  --avk-text: #1d1d1f;
+  --avk-sec: #4b4b52;
+  --avk-ter: #6e6e75;
+  --avk-link: #0062c4;
+  --avk-visited: #7340b8;
+  --avk-gutter: 170px;
+  --avk-main: 640px;
+  --avk-side: 320px;
+  --avk-pad: max(20px, calc(50vw - 620px));
+}
+
+:root.theme-dark,
+:root.theme-black {
+  --avk-bg: #18191c;
+  --avk-field: #222327;
+  --avk-badge: #303136;
+  --avk-line: #2e3035;
+  --avk-text: #ececef;
+  --avk-sec: #b7b9bf;
+  --avk-ter: #90939b;
+  --avk-link: #7ab3ff;
+  --avk-visited: #b99cff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root.theme-auto {
+    --avk-bg: #18191c;
+    --avk-field: #222327;
+    --avk-badge: #303136;
+    --avk-line: #2e3035;
+    --avk-text: #ececef;
+    --avk-sec: #b7b9bf;
+    --avk-ter: #90939b;
+    --avk-link: #7ab3ff;
+    --avk-visited: #b99cff;
+  }
+}
+
+/* The stock theme's colours, pointed at ours */
+:root,
+:root.theme-auto,
+:root.theme-dark,
+:root.theme-black {
+  --color-base-font: var(--avk-text);
+  --color-base-background: var(--avk-bg);
+  --color-base-background-mobile: var(--avk-bg);
+  --color-url-font: var(--avk-link);
+  --color-url-visited-font: var(--avk-visited);
+  --color-header-background: var(--avk-bg);
+  --color-header-border: var(--avk-line);
+  --color-footer-background: var(--avk-bg);
+  --color-footer-border: var(--avk-line);
+  --color-sidebar-border: var(--avk-line);
+  --color-sidebar-font: var(--avk-text);
+  --color-sidebar-background: var(--avk-bg);
+  --color-btn-background: var(--avk-link);
+  --color-search-border: var(--avk-line);
+  --color-search-shadow: none;
+  --color-search-background: var(--avk-field);
+  --color-search-font: var(--avk-text);
+  --color-search-background-hover: var(--avk-link);
+  --color-categories-item-selected-font: var(--avk-link);
+  --color-categories-item-border-selected: var(--avk-link);
+  --color-autocomplete-font: var(--avk-text);
+  --color-autocomplete-border: var(--avk-line);
+  --color-autocomplete-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --color-autocomplete-background: var(--avk-field);
+  --color-autocomplete-background-hover: var(--avk-badge);
+  --color-answer-font: var(--avk-text);
+  --color-answer-background: var(--avk-bg);
+  --color-result-background: var(--avk-bg);
+  --color-result-border: var(--avk-line);
+  --color-result-url-font: var(--avk-text);
+  --color-result-vim-selected: var(--avk-badge);
+  --color-result-description-highlight-font: var(--avk-text);
+  --color-result-link-font: var(--avk-link);
+  --color-result-link-font-highlight: var(--avk-link);
+  --color-result-link-visited-font: var(--avk-visited);
+  --color-result-publishdate-font: var(--avk-ter);
+  --color-result-engines-font: var(--avk-ter);
+  --color-favicon-background-color: var(--avk-badge);
+  --color-favicon-border-color: transparent;
+  --color-toolkit-loader-border: var(--avk-badge);
+}
+
+html,
+body {
+  background: var(--avk-bg);
+  color: var(--avk-text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Only what the design needs */
+.search_filters,
+#links_on_top .link_on_top_about,
+#links_on_top span,
+#sidebar > :not(#infoboxes),
+#infoboxes summary,
+.result .engines,
+.result-default .thumbnail_link,
+#backToTop,
+button.category_button svg {
+  display: none !important;
+}
+
+/* Header: logo, search box, tabs */
+#links_on_top {
+  top: 18px;
+  right: 16px;
+}
+
+#links_on_top a {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--avk-sec);
+}
+
+#main_results #search_header {
+  grid-template-columns: var(--avk-gutter) minmax(0, 700px);
+  grid-template-areas: "logo search" "spacer categories";
+  gap: 6px 20px;
+  padding: 20px 20px 0 var(--avk-pad);
+  border-bottom: 1px solid var(--avk-line);
+}
+
+#main_results #search_logo {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0;
+}
+
+#main_results #search_logo svg {
+  flex: none;
+  width: auto;
+  height: 16px;
+  margin: 0;
+}
+
+.search_box,
+#search_view:focus-within .search_box {
+  max-width: 700px;
+  height: 46px;
+  box-sizing: border-box;
+  background: var(--avk-field);
+  border: 1px solid var(--avk-line);
+  border-radius: 10px;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+#search_view:focus-within .search_box {
+  border-color: var(--avk-link);
+}
+
+#q,
+#send_search,
+#clear_search {
+  background: transparent;
+  font-size: 16px;
+}
+
+#q {
+  border-radius: 0;
+  padding-left: 14px;
+}
+
+#send_search,
+#clear_search {
+  color: var(--avk-sec);
+}
+
+.search_categories,
+#categories_container {
+  display: flex;
+  gap: 22px;
+}
+
+button.category_button {
+  height: 44px;
+  padding: 0;
+  font-size: 15px;
+  color: var(--avk-sec);
+  border-bottom: 2px solid transparent;
+}
+
+button.category_button.selected {
+  color: var(--avk-link);
+  font-weight: 600;
+  border-bottom-color: var(--avk-link);
+}
+
+/* Results column and info card. The image grid keeps the stock layout. */
+#urls,
+#sidebar {
+  min-width: 0;
+}
+
+#main_results #results:not(.only_template_images) {
+  grid-template:
+    "corrections sidebar" min-content
+    "answers sidebar" min-content
+    "urls sidebar" 1fr
+    "pagination sidebar" min-content / minmax(0, var(--avk-main)) var(--avk-side);
+  gap: 0 48px;
+  justify-content: start;
+  margin: 18px 20px 0 calc(var(--avk-pad) + var(--avk-gutter) + 20px);
+}
+
+#main_results .result:not(.result-images) {
+  width: 100%;
+  margin: 0 0 22px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.result .url_header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.result .favicon img {
+  width: 16px;
+  height: 16px;
+  border: 0;
+  border-radius: 4px;
+}
+
+.result .url_wrapper {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.result .url_wrapper .url_i1 {
+  color: var(--avk-text);
+}
+
+.result .url_wrapper .url_o2 {
+  color: var(--avk-ter);
+  text-align: left;
+  text-overflow: ellipsis;
+}
+
+.result .url_wrapper .url_o2 .url_i2 {
+  float: none;
+}
+
+.result h3 {
+  margin: 3px 0;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.result h3 a {
+  font-size: 1em;
+  font-weight: 500;
+}
+
+.result .content,
+.result p.content {
+  margin: 0;
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--avk-sec);
+}
+
+.result .content .highlight {
+  font-weight: 600;
+  color: var(--avk-text);
+}
+
+/* Infinite scroll: a line between pages, skeleton results while loading */
+#urls hr {
+  height: 1px;
+  margin: 0 0 22px;
+  border: 0;
+  background: var(--avk-line);
+}
+
+.loader {
+  width: 100%;
+  height: 196px;
+  margin: 0 0 22px;
+  border: 0;
+  border-radius: 0;
+  text-indent: -9999em;
+  transform: none;
+  animation: avk-pulse 1.1s ease-in-out infinite alternate;
+  --sk: var(--avk-badge);
+  background:
+    linear-gradient(var(--sk) 0 0) 0 0 / 16px 16px no-repeat,
+    linear-gradient(var(--sk) 0 0) 24px 3px / 180px 10px no-repeat,
+    linear-gradient(var(--sk) 0 0) 0 28px / 60% 14px no-repeat,
+    linear-gradient(var(--sk) 0 0) 0 52px / 100% 10px no-repeat,
+    linear-gradient(var(--sk) 0 0) 0 70px / 76% 10px no-repeat,
+    linear-gradient(var(--sk) 0 0) 0 110px / 16px 16px no-repeat,
+    linear-gradient(var(--sk) 0 0) 24px 113px / 140px 10px no-repeat,
+    linear-gradient(var(--sk) 0 0) 0 138px / 48% 14px no-repeat,
+    linear-gradient(var(--sk) 0 0) 0 162px / 100% 10px no-repeat,
+    linear-gradient(var(--sk) 0 0) 0 180px / 64% 10px no-repeat;
+}
+
+@keyframes avk-pulse {
+  from { opacity: 1; }
+  to { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader { animation: none; }
+}
+
+#pagination button,
+#pagination input[type="submit"] {
+  background: transparent;
+  color: var(--avk-link);
+  border: 1px solid var(--avk-line);
+  border-radius: 10px;
+  min-height: 40px;
+  padding: 0 14px;
+}
+
+#infoboxes .sidebar-collapsible {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Wikidata labels its image link "P18" */
+#infoboxes .url:has(a[href*="Special:FilePath"]) {
+  display: none;
+}
+
+#sidebar .infobox {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 2px 0 0;
+  padding: 0 0 0 24px;
+  border: 0;
+  border-left: 1px solid var(--avk-line);
+  border-radius: 0;
+  font-size: 15px;
+  line-height: 22px;
+}
+
+#sidebar .infobox img {
+  order: -1;
+  float: none;
+  width: 132px;
+  max-width: 100%;
+  max-height: 170px;
+  object-fit: cover;
+  margin: 0;
+  border-radius: 10px;
+}
+
+#sidebar .infobox h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 600;
+}
+
+#sidebar .infobox p {
+  margin: 0;
+  color: var(--avk-sec);
+}
+
+#sidebar .infobox .attributes {
+  padding-top: 12px;
+  border-top: 1px solid var(--avk-line);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+#sidebar .infobox .attributes dl {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 12px;
+  margin: 0 0 8px;
+}
+
+#sidebar .infobox .attributes dt,
+#sidebar .infobox .attributes dd {
+  display: block;
+  margin: 0;
+  font-weight: 400;
+}
+
+#sidebar .infobox .attributes dt {
+  color: var(--avk-ter);
+}
+
+#sidebar .infobox .urls ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#infoboxes .infobox .url a {
+  font-size: 14px;
+}
+
+/* Home page */
+.index .title {
+  background: none;
+  min-height: 0;
+  margin: 0 auto 32px;
+  text-align: center;
+}
+
+.index .title h1 {
+  visibility: visible;
+  margin: 0;
+  font-size: 0;
+  line-height: 0;
+}
+
+.index .title svg {
+  height: 30px;
+  width: auto;
+}
+
+#main_index .search_box {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+}
+
+footer {
+  background: transparent;
+  border-top: 0;
+  color: var(--avk-ter);
+  font-size: 13px;
+}
+
+footer a {
+  color: var(--avk-sec);
+}
+
+/* Narrow screens: logo on its own row, card above the results */
+@media screen and (max-width: 79.75em) {
+  #main_results #results:not(.only_template_images) {
+    grid-template:
+      "corrections" min-content
+      "answers" min-content
+      "sidebar" min-content
+      "urls" 1fr
+      "pagination" min-content / minmax(0, 700px);
+    width: auto;
+    box-sizing: border-box;
+    margin: 18px 0 0;
+    padding: 0 16px;
+    justify-content: center;
+  }
+
+  #main_results #search_header {
+    grid-template-columns: minmax(0, 700px);
+    grid-template-areas: "logo" "search" "categories";
+    justify-content: center;
+    width: auto;
+    box-sizing: border-box;
+    padding: 14px 16px 0;
+  }
+
+  #main_results #search_logo {
+    height: 30px;
+    padding-right: 52px;
+  }
+
+  #main_results #search_view,
+  body.results_endpoint #search_view {
+    width: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  #main_results .search_box {
+    max-width: none;
+  }
+
+  #sidebar {
+    margin: 0;
+  }
+
+  #sidebar .infobox {
+    padding: 0 0 20px;
+    margin-bottom: 22px;
+    border-left: 0;
+    border-bottom: 1px solid var(--avk-line);
+  }
+
+  #sidebar .infobox img {
+    width: 88px;
+    max-height: 112px;
+  }
+
+  #sidebar .infobox p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+  }
+}

@@ -1,0 +1,9 @@
+[favicons]
+
+cfg_schema = 1
+
+# /tmp is a small tmpfs, so the site icon cache lives on the cache volume
+[favicons.cache]
+
+db_url = "/var/cache/searxng/faviconcache.db"
+LIMIT_TOTAL_BYTES = 104857600  # 100 MB

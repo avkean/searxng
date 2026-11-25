@@ -6,7 +6,7 @@ It runs the official SearXNG image, with a few changes. Parts of the setup are a
 
 - Google's results through MetaCrawler and Google's Programmable Search, since Google blocks SearXNG's own Google engine almost every time
 - [Anubis](https://github.com/TecharoHQ/anubis) in front of SearXNG
-- my logo and icons in place of the SearXNG ones
+- a compact look (`branding/avkean.css`) on top of the stock theme, with my logo and icons
 
 ## Running it
 
