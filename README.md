@@ -4,8 +4,7 @@ Config for [AVKEAN Search](https://searxng.avkean.com), my public SearXNG instan
 
 It runs the official SearXNG image, with a few changes. Parts of the setup are adapted from [priv.au](https://priv.au) ([privau/searxng](https://github.com/privau/searxng)).
 
-- a Google engine (`google_dual_ua.py`) with the fix priv.au runs, since Google blocks the stock one
-- a Brave engine (`brave_web.py`) that reads the results page HTML over HTTP/3, since Brave changed the page data the default one reads and rate limits HTTP/2
+- Google's results through MetaCrawler and Google's Programmable Search, since Google blocks SearXNG's own Google engine almost every time
 - [Anubis](https://github.com/TecharoHQ/anubis) in front of SearXNG
 - my logo and icons in place of the SearXNG ones
 
@@ -19,7 +18,7 @@ docker compose up -d --build
 
 Anubis is the only service on `proxy_net`, which is where the reverse proxy reaches it. The favicons and the homepage and preferences logos are served by the reverse proxy from `branding/`, so drop the `branding/` mounts if you use this elsewhere.
 
-`update.sh` rebuilds on the latest SearXNG image and rolls back if `smoke-test.sh` fails.
+`update.sh` rebuilds on the latest SearXNG image and rolls back if `smoke-test.sh` fails. If searches already fail before the update, only the local checks decide it, so an outside outage doesn't hold back updates.
 
 ## Issues
 

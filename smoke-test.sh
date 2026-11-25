@@ -18,21 +18,12 @@ done
 test "$(docker exec searxng-valkey valkey-cli -n 0 ping)" = PONG
 test "$(docker exec searxng-valkey valkey-cli -n 1 ping)" = PONG
 
-docker exec -i searxng /usr/local/searxng/.venv/bin/python - < "$app_dir/check-google-adapter.py"
-
 docker exec searxng python -c \
   "import urllib.request; body=urllib.request.urlopen('http://127.0.0.1:8080/', timeout=10).read(); assert b'AVKEAN Search' in body"
 
-docker exec -i searxng /usr/local/searxng/.venv/bin/python - < "$app_dir/check-search-quality.py"
-
-if docker exec searxng /usr/local/searxng/.venv/bin/python -c \
-  "import sys,urllib.parse,urllib.request; from lxml import html; body=urllib.request.urlopen('http://127.0.0.1:8080/search?'+urllib.parse.urlencode({'q':'searxng documentation','engines':'google','language':'all'}), timeout=30).read(); dom=html.fromstring(body); results=dom.xpath('//article[contains(@class,\"result\")]'); messages=' '.join(dom.xpath('//*[@id=\"engines_msg\"]//text()')); sys.exit(0 if len(results) >= 5 else 75 if any(reason in messages for reason in ('CAPTCHA','Too many requests','Access denied')) else 1)"; then
-  :
-elif test "$?" -eq 75; then
-  printf '%s\n' 'Google temporarily blocked its smoke-test query; continuing because the application search passed' >&2
-else
-  printf '%s\n' 'Google smoke-test query failed without a recognized temporary upstream block' >&2
-  exit 1
+# update.sh skips these when outside engines already fail on the running images
+if [ "${SKIP_SEARCH:-0}" != 1 ]; then
+  docker exec -i searxng /usr/local/searxng/.venv/bin/python - < "$app_dir/check-search-quality.py"
 fi
 
 anubis_ip=$(docker inspect -f '{{(index .NetworkSettings.Networks "proxy_net").IPAddress}}' searxng-anubis)

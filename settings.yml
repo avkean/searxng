@@ -25,18 +25,32 @@ categories_as_tabs:
   news:
 
 engines:
+  # Google's results, from System1. It takes the region from the server's
+  # IP. Google's order leads, the other engines fill in. Higher than 4 only
+  # pushes out useful extras from DuckDuckGo.
+  - name: metacrawler
+    disabled: false
+    inactive: false
+    weight: 4
+    retries: 0
+    retry_on_http_error: false
+  # Google blocks almost every request from anything that isn't a full
+  # browser. Kept on so a fix in upstream SearXNG arrives with the nightly
+  # update. Google gives the server's IPv4 address much worse results.
   - name: google
     disabled: false
     inactive: false
-    engine: google_dual_ua
-    # Google's order leads, the other engines fill in. Higher than 4 only
-    # pushes out useful extras from Brave and DuckDuckGo.
+    network: ipv6
     weight: 4
     timeout: 3.0
     retries: 0
     retry_on_http_error: false
+  # Google's Programmable Search. Its whole-web search ends on 1 Jan 2027.
   - name: google cse
-    disabled: true
+    disabled: false
+    inactive: false
+    retries: 0
+    retry_on_http_error: false
   # Bing results were mostly irrelevant
   - name: bing
     disabled: true
@@ -45,12 +59,8 @@ engines:
     disabled: false
     retries: 0
     retry_on_http_error: false
-  # fallback for when Google is suspended
   - name: brave
-    engine: brave_web
-    disabled: false
-    retries: 0
-    retry_on_http_error: false
+    disabled: true
   - name: duckduckgo
     disabled: true
   - name: startpage

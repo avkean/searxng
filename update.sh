@@ -13,6 +13,13 @@ if ! flock -n 9; then
   exit 0
 fi
 
+# Searches depend on outside engines. If they already fail on the running
+# images, the new ones can't be blamed, so only the local checks decide.
+if ! docker exec -i searxng /usr/local/searxng/.venv/bin/python - < "$app_dir/check-search-quality.py"; then
+  printf '%s\n' 'Searches already fail before the update; judging it on the local checks only' >&2
+  export SKIP_SEARCH=1
+fi
+
 # Docker deletes an untagged image as soon as nothing uses it, so keep the
 # running images under a rollback tag until the new ones pass.
 image_refs=()
