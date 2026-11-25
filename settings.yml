@@ -11,8 +11,13 @@ brand:
 search:
   autocomplete: kagi
   autocomplete_min: 1
+  # Blocks are mostly one-offs now, so pause an engine for a minute, not
+  # hours. MetaCrawler sits behind Cloudflare.
   suspended_times:
+    SearxEngineAccessDenied: 60
     SearxEngineCaptcha: 60
+    cf_SearxEngineAccessDenied: 60
+    cf_SearxEngineCaptcha: 60
 
 preferences:
   lock:
@@ -32,8 +37,9 @@ engines:
     disabled: false
     inactive: false
     weight: 4
-    retries: 0
-    retry_on_http_error: false
+    # Cloudflare turns away the odd request, a second try gets through
+    retries: 1
+    retry_on_http_error: [403]
   # Google blocks almost every request from anything that isn't a full
   # browser. Kept on so a fix in upstream SearXNG arrives with the nightly
   # update. Google gives the server's IPv4 address much worse results.
