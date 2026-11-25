@@ -9,6 +9,11 @@ brand:
   new_issue_url: https://github.com/avkean/searxng/issues/new
 
 search:
+  # SearXNG's "auto" follows the browser's language. For en-SG it then tries
+  # each Singapore language for Wikipedia, and the first one with a Singapore
+  # variant is Chinese, so the info card comes back in Chinese. "all" leaves
+  # the language to each engine.
+  default_lang: all
   autocomplete: kagi
   autocomplete_min: 1
   # Site icons next to results. The server fetches and caches them, so
