@@ -25,6 +25,10 @@ docker exec searxng python -c \
 docker exec searxng python -c \
   "import urllib.request; body=urllib.request.urlopen('http://127.0.0.1:8080/', timeout=10).read(); assert b'/avkean.css' in body, 'avkean.css is not linked'; css=urllib.request.urlopen('http://127.0.0.1:8080/static/themes/simple/avkean.css', timeout=10).read(); assert b'avkean search' in css"
 
+# settings.yml replaces SearXNG's plugin list, so check the defaults are still on
+docker exec searxng /usr/local/searxng/.venv/bin/python -c \
+  "from searx import settings; p={k.split('.')[2]: v['active'] for k, v in settings['plugins'].items()}; assert all(p.get(x) for x in ('calculator', 'unit_converter', 'tracker_url_remover', 'hostnames', 'infinite_scroll')), p"
+
 # update.sh skips these when outside engines already fail on the running images
 if [ "${SKIP_SEARCH:-0}" != 1 ]; then
   docker exec -i searxng /usr/local/searxng/.venv/bin/python - < "$app_dir/check-search-quality.py"

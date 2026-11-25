@@ -26,9 +26,30 @@ preferences:
   lock:
     - image_proxy
 
-# The next page loads as you scroll, no page numbers
+# This list replaces SearXNG's own, so it repeats the defaults. The only
+# change is infinite scroll: the next page loads as you scroll.
 plugins:
+  searx.plugins.calculator.SXNGPlugin:
+    active: true
   searx.plugins.infinite_scroll.SXNGPlugin:
+    active: true
+  searx.plugins.hash_plugin.SXNGPlugin:
+    active: true
+  searx.plugins.self_info.SXNGPlugin:
+    active: true
+  searx.plugins.unit_converter.SXNGPlugin:
+    active: true
+  searx.plugins.ahmia_filter.SXNGPlugin:
+    active: true
+  searx.plugins.hostnames.SXNGPlugin:
+    active: true
+  searx.plugins.time_zone.SXNGPlugin:
+    active: true
+  searx.plugins.oa_doi_rewrite.SXNGPlugin:
+    active: false
+  searx.plugins.tor_check.SXNGPlugin:
+    active: false
+  searx.plugins.tracker_url_remover.SXNGPlugin:
     active: true
 
 categories_as_tabs:
