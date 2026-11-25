@@ -12,7 +12,7 @@ Config for AVKEAN Search, a public SearXNG instance. It runs the official `searx
 - `limiter.toml`: SearXNG limiter.
 - `branding/`: logo and icons. `index.html` is the homepage and `searxng-wordmark.min.svg` replaces the results-page logo. The reverse proxy serves the other files in place of the stock theme images.
 - `update.sh`: rebuilds on the latest images and rolls back if `smoke-test.sh` fails. It runs nightly from cron. If searches already fail before the update, only the local checks decide it.
-- `check-search-quality.py`: real searches through MetaCrawler, DuckDuckGo and the default engines. `smoke-test.sh` runs it.
+- `check-search-quality.py`: real searches through MetaCrawler and the default engines. `smoke-test.sh` runs it.
 
 Secrets are in `.env`, which is not committed.
 

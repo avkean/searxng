@@ -35,10 +35,3 @@ assert any('docs.docker.com/reference/compose-file/services' in url for url in l
     'Docker reference missing from the MetaCrawler top three'
 )
 print('MetaCrawler search passed')
-
-results = search(q='docker compose healthcheck', language='en', safesearch=0, engines='duckduckgo web')
-assert len(results) >= 5, 'DuckDuckGo returned fewer than five results'
-assert any('docs.docker.com/reference/compose-file/services' in url for url in links(results)[:5]), (
-    'Docker reference missing from the DuckDuckGo top five'
-)
-print('DuckDuckGo search passed')

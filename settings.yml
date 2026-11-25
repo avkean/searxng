@@ -57,6 +57,9 @@ engines:
     inactive: true
   - name: duckduckgo web
     disabled: false
+    # With the default Firefox fingerprint, DuckDuckGo answers the server
+    # with its bot check page
+    impersonate: chrome
     retries: 0
     retry_on_http_error: false
   - name: brave
