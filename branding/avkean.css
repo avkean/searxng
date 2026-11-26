@@ -165,9 +165,11 @@ button.category_button svg {
   background: var(--avk-hover);
 }
 
-#links_on_top svg {
+/* the stock margin pushed the gear off centre */
+#links_on_top a svg {
   width: 20px;
   height: 20px;
+  margin: 0;
 }
 
 /* the gear's label stays for screen readers; the stock theme hides it on
