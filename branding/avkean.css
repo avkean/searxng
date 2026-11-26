@@ -129,7 +129,6 @@ a {
 /* Only what the design needs */
 .search_filters,
 #links_on_top .link_on_top_about,
-#links_on_top span,
 #sidebar > :not(#infoboxes, #engines_msg),
 #infoboxes summary,
 .result .engines,
@@ -169,6 +168,23 @@ button.category_button svg {
 #links_on_top svg {
   width: 20px;
   height: 20px;
+}
+
+/* the gear's label stays for screen readers; the stock theme hides it on
+   narrower screens */
+:root #links_on_top span {
+  display: block;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+#links_on_top a:focus-visible {
+  outline: 2px solid var(--avk-link);
+  outline-offset: 2px;
 }
 
 /* Search box */
@@ -238,6 +254,12 @@ button.category_button svg {
 #search_view:focus-within .search_box #send_search:hover {
   background: var(--avk-hover);
   color: var(--avk-text);
+}
+
+#search_view .search_box #clear_search:focus-visible,
+#search_view .search_box #send_search:focus-visible {
+  outline: 2px solid var(--avk-link);
+  outline-offset: -2px;
 }
 
 #clear_search svg,
@@ -728,6 +750,13 @@ body.results_endpoint #search_view {
   padding-left: 20px;
 }
 
+/* Result titles reached with the keyboard */
+#main_results .result h3 a:focus-visible {
+  outline: 2px solid var(--avk-link);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 /* Response time per engine, and why an engine failed */
 #engines_msg .sidebar-collapsible {
   margin: 0;
@@ -966,6 +995,7 @@ footer a[href="https://avkean.com"] {
 
 footer a[href="https://avkean.com"]::after {
   content: "Contact";
+  content: "Contact" / "";
   font-size: 14px;
 }
 
@@ -1307,8 +1337,9 @@ input.checkbox-onoff[type="checkbox"]:focus::after {
   display: none;
 }
 
-input.checkbox-onoff[type="checkbox"]:focus-visible {
-  outline: 3px solid var(--avk-ring);
+/* outweighs the stock "#main_preferences .value input:focus" reset */
+#main_preferences input.checkbox-onoff[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--avk-link);
   outline-offset: 2px;
 }
 
