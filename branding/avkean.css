@@ -824,8 +824,8 @@ body.results_endpoint #search_view {
   margin-bottom: 12px;
 }
 
-/* lines up with the card's text */
-#infoboxes + #engines_msg {
+/* lines up with the card's text; a hidden #suggestions can sit between them */
+#infoboxes ~ #engines_msg {
   margin-top: 24px;
   padding-left: 25px;
 }
@@ -1109,7 +1109,7 @@ footer a[href="https://avkean.com"]::after {
     margin-bottom: 14px;
   }
 
-  #infoboxes + #engines_msg {
+  #infoboxes ~ #engines_msg {
     margin-top: 0;
     padding-left: 0;
   }
