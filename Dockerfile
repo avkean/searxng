@@ -6,8 +6,11 @@ RUN sed -i \
     searx/version_frozen.py
 
 # avkean.css restyles the stock theme. It loads after SearXNG's own CSS.
-COPY branding/avkean.css searx/static/themes/simple/avkean.css
+# avkean.js nests results from the same site.
+COPY branding/avkean.css branding/avkean.js searx/static/themes/simple/
 RUN sed -i \
-    "/filename='sxng-ltr.min.css'/a\\  <link rel=\"stylesheet\" href=\"{{ url_for('static', filename='avkean.css') }}\" type=\"text/css\" media=\"screen\">" \
+    -e "/filename='sxng-ltr.min.css'/a\\  <link rel=\"stylesheet\" href=\"{{ url_for('static', filename='avkean.css') }}\" type=\"text/css\" media=\"screen\">" \
+    -e "/filename='sxng-core.min.js'/a\\  <script src=\"{{ url_for('static', filename='avkean.js') }}\" defer></script>" \
     searx/templates/simple/base.html \
- && grep -q "filename='avkean.css'" searx/templates/simple/base.html
+ && grep -q "filename='avkean.css'" searx/templates/simple/base.html \
+ && grep -q "filename='avkean.js'" searx/templates/simple/base.html

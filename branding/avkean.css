@@ -528,6 +528,62 @@ body.results_endpoint #search_view {
   }
 }
 
+/* Results from the same site nested under the first one (avkean.js). The
+   line drops from the middle of the site icon, and the text lines up with
+   the address beside it (16px icon, 8px gap). Padding, not margins, keeps
+   the line unbroken between them. */
+#main_results .result.avk-sub {
+  width: auto;
+  margin: 0 0 0 7px;
+  padding: 16px 0 0 16px;
+  border-left: 1px solid var(--avk-line);
+}
+
+#main_results .result.avk-sub-first {
+  margin-top: -10px;
+  padding-top: 2px;
+}
+
+#main_results .result.avk-sub-last {
+  margin-bottom: 24px;
+  padding-bottom: 2px;
+}
+
+#main_results .avk-sub .url_header {
+  display: none;
+}
+
+#main_results .avk-sub h3 {
+  margin: 0 0 2px;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+#main_results .avk-sub.result-default p.content {
+  font-size: 14px;
+  line-height: 20px;
+  -webkit-line-clamp: 1;
+}
+
+#main_results .avk-more {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--avk-link);
+  text-decoration: none;
+}
+
+#main_results .avk-more:hover {
+  text-decoration: underline;
+}
+
+#main_results .avk-more:focus-visible {
+  outline: 2px solid var(--avk-link);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .result .content .highlight {
   font-weight: 600;
   color: var(--avk-text);

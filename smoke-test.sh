@@ -21,9 +21,9 @@ test "$(docker exec searxng-valkey valkey-cli -n 1 ping)" = PONG
 docker exec searxng python -c \
   "import urllib.request; body=urllib.request.urlopen('http://127.0.0.1:8080/', timeout=10).read(); assert b'AVKEAN Search' in body"
 
-# the theme hook in the Dockerfile relies on a line in SearXNG's base.html
+# the theme hooks in the Dockerfile rely on lines in SearXNG's base.html
 docker exec searxng python -c \
-  "import urllib.request; body=urllib.request.urlopen('http://127.0.0.1:8080/', timeout=10).read(); assert b'/avkean.css' in body, 'avkean.css is not linked'; css=urllib.request.urlopen('http://127.0.0.1:8080/static/themes/simple/avkean.css', timeout=10).read(); assert b'avkean search' in css"
+  "import urllib.request; body=urllib.request.urlopen('http://127.0.0.1:8080/', timeout=10).read(); assert b'/avkean.css' in body, 'avkean.css is not linked'; assert b'/avkean.js' in body, 'avkean.js is not linked'; css=urllib.request.urlopen('http://127.0.0.1:8080/static/themes/simple/avkean.css', timeout=10).read(); assert b'avkean search' in css; js=urllib.request.urlopen('http://127.0.0.1:8080/static/themes/simple/avkean.js', timeout=10).read(); assert b'avk-sub' in js"
 
 # settings.yml replaces SearXNG's plugin list, so check the defaults are still on
 docker exec searxng /usr/local/searxng/.venv/bin/python -c \
