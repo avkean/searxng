@@ -19,7 +19,7 @@ Secrets are in `.env`, which is not committed.
 
 ## Rules
 
-- Google's results are what make the results good. They come from MetaCrawler (System1), plus Google's Programmable Search until its whole-web search ends on 1 Jan 2027. Google itself blocks almost every request from anything that isn't a full browser; the stock engine stays on so an upstream fix arrives with the nightly update.
+- Google's results are what make the results good. They come from MetaCrawler (System1). Google's Programmable Search is off: Google blocks most of its requests from the server. Google itself blocks almost every request from anything that isn't a full browser; the stock engine stays on so an upstream fix arrives with the nightly update.
 - Test real queries after changing engines, and keep test query volume low. Never test Google from a home connection.
 - Prefer settings over code or template overrides. Keep changes small.
 - Style through `avkean.css`, not by copying templates: copied templates break when SearXNG updates. Check light, dark and phone width after a change.

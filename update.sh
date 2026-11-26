@@ -40,10 +40,20 @@ rollback() {
 
 "${compose[@]}" pull --ignore-buildable
 "${compose[@]}" build --pull
-if ! "${compose[@]}" up -d --wait --wait-timeout 180; then
+# settings.yml and the other mounted files are replaced by git pull, and a
+# running container keeps the old copy, so SearXNG is always recreated
+if ! "${compose[@]}" up -d --wait --wait-timeout 180 --force-recreate --no-deps searxng ||
+  ! "${compose[@]}" up -d --wait --wait-timeout 180; then
   rollback
   exit 1
 fi
+
+changed=false
+for index in "${!containers[@]}"; do
+  if [ "$(docker inspect -f '{{.Image}}' "${containers[$index]}")" != "$(docker image inspect -f '{{.Id}}' "searxng-rollback:${containers[$index]}")" ]; then
+    changed=true
+  fi
+done
 
 update_ok=true
 if [ "${SEARXNG_UPDATE_FORCE_SMOKE_FAILURE:-0}" = 1 ]; then
@@ -53,6 +63,10 @@ elif ! "$app_dir/smoke-test.sh"; then
 fi
 
 if [ "$update_ok" = false ]; then
+  if [ "$changed" = false ] && [ "${SEARXNG_UPDATE_FORCE_SMOKE_FAILURE:-0}" != 1 ]; then
+    printf '%s\n' 'SearXNG smoke test failed, but the images are unchanged, so there is nothing to roll back' >&2
+    exit 1
+  fi
   rollback
   exit 1
 fi
@@ -60,5 +74,6 @@ fi
 for container in "${containers[@]}"; do
   docker image rm "searxng-rollback:$container" >/dev/null 2>&1 || true
 done
+docker image prune -f --filter label=com.docker.compose.project=searxng >/dev/null
 
 printf '%s\n' 'SearXNG update completed and passed verification'

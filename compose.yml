@@ -2,7 +2,12 @@ name: searxng
 
 services:
   searxng:
-    build: .
+    build:
+      context: .
+      # Without build metadata a cached rebuild keeps the same image ID, so
+      # update.sh can tell when nothing changed
+      provenance: false
+      sbom: false
     container_name: searxng
     user: searxng
     command: ["/usr/local/searxng/.venv/bin/granian", "searx.webapp:app"]
@@ -43,11 +48,10 @@ services:
     pids_limit: 256
     mem_limit: 1g
     stop_grace_period: 30s
+    # SearXNG logs failed engine requests with the search query in the URL.
+    # Switch to json-file while debugging.
     logging:
-      driver: json-file
-      options:
-        max-size: 10m
-        max-file: "3"
+      driver: none
 
   searxng-valkey:
     image: valkey/valkey:9-alpine
@@ -67,9 +71,10 @@ services:
       - no-new-privileges:true
     command:
       - valkey-server
+      # nothing here needs to outlive a restart, and Anubis keeps visitor
+      # IPs in it
       - --save
-      - "60"
-      - "1"
+      - ""
       - --loglevel
       - warning
       - --maxmemory

@@ -4,7 +4,7 @@ Config for [AVKEAN Search](https://searxng.avkean.com), my public SearXNG instan
 
 It runs the official SearXNG image, with a few changes. Parts of the setup are adapted from [priv.au](https://priv.au) ([privau/searxng](https://github.com/privau/searxng)).
 
-- Google's results through MetaCrawler and Google's Programmable Search, since Google blocks SearXNG's own Google engine almost every time
+- Google's results through MetaCrawler, since Google blocks SearXNG's own Google engine almost every time
 - [Anubis](https://github.com/TecharoHQ/anubis) in front of SearXNG
 - a compact look (`branding/avkean.css`) on top of the stock theme, with my logo and icons
 

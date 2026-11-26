@@ -85,12 +85,14 @@ engines:
     timeout: 3.0
     retries: 0
     retry_on_http_error: false
-  # Google's Programmable Search. Its whole-web search ends on 1 Jan 2027.
+  # Google's Programmable Search. Google blocks most of its requests from the
+  # server, and its whole-web search ends on 1 Jan 2027.
   - name: google cse
-    disabled: false
-    inactive: false
-    retries: 0
-    retry_on_http_error: false
+    disabled: true
+    inactive: true
+  - name: google cse images
+    disabled: true
+    inactive: true
   # Bing results were mostly irrelevant
   - name: bing
     disabled: true
@@ -103,6 +105,25 @@ engines:
     retries: 0
     retry_on_http_error: false
   - name: brave
+    disabled: true
+  # DuckDuckGo blocks these from the server every time
+  - name: duckduckgo images
+    disabled: true
+  - name: duckduckgo videos
+    disabled: true
+  - name: duckduckgo news
+    disabled: true
+  # Wikinews sorts by date, so old unrelated stories topped the News tab.
+  # Reuters always failed.
+  - name: wikinews
+    disabled: true
+  - name: reuters
+    disabled: true
+  # Vimeo timed out and held up every video search; Commons videos were
+  # mostly unrelated.
+  - name: vimeo
+    disabled: true
+  - name: wikicommons.videos
     disabled: true
   - name: duckduckgo
     disabled: true

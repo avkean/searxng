@@ -29,9 +29,14 @@ docker exec searxng python -c \
 docker exec searxng /usr/local/searxng/.venv/bin/python -c \
   "from searx import settings; p={k.split('.')[2]: v['active'] for k, v in settings['plugins'].items()}; assert all(p.get(x) for x in ('calculator', 'unit_converter', 'tracker_url_remover', 'hostnames', 'infinite_scroll')), p"
 
-# update.sh skips these when outside engines already fail on the running images
-if [ "${SKIP_SEARCH:-0}" != 1 ]; then
+# update.sh skips these when outside engines already fail on the running
+# images. Outside engines turn away the odd request, so a failure gets a
+# second try.
+search_check() {
   docker exec -i searxng /usr/local/searxng/.venv/bin/python - < "$app_dir/check-search-quality.py"
+}
+if [ "${SKIP_SEARCH:-0}" != 1 ]; then
+  search_check || { sleep 30; search_check; }
 fi
 
 anubis_ip=$(docker inspect -f '{{(index .NetworkSettings.Networks "proxy_net").IPAddress}}' searxng-anubis)
