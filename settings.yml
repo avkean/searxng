@@ -129,12 +129,11 @@ engines:
     disabled: true
   - name: startpage
     disabled: true
-  # Wikipedia and Wikidata only fill the info card: Wikipedia the photo and
-  # summary, Wikidata the facts. Wikidata is often the slowest engine, so a
-  # short timeout drops the facts instead of slowing the search.
+  # Wikipedia fills the info card with a photo and summary
   - name: wikipedia
     disabled: false
     timeout: 1.5
+  # Wikidata added the facts to the info card, but its query takes 0.8 to
+  # 1.7 s and every search waited for it
   - name: wikidata
-    disabled: false
-    timeout: 1.0
+    disabled: true
